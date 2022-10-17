@@ -12,23 +12,25 @@ end
 def target_search_algo(deadends, target)
   deadends_and_visited = deadends << [0,0,0,0]
   queue = [] << [0,0,0,0]
+  total = 0
+
   until queue.empty?
-    cur = queue.shift
-    last_combo = [cur[0], cur[1], cur[2], cur[3]]
-    return nb_of_moves(cur) if is_target?(last_combo, target)
-    next_moves = all_next_moves(last_combo)
-    moves_possible = filter_available_moves(next_moves, deadends_and_visited)
-    next_moves.each do |move|
-      deadends_and_visited << move.clone
-      move << cur
-      queue << move
+    size = queue.length
+    size.times do
+      cur = queue.shift
+      byebug
+      return total if cur == target
+      next_moves = all_next_moves(cur)
+      next_moves.each do |move|
+        next if deadends_and_visited.include?(move)
+        deadends_and_visited << move
+        queue << move
+      end
+      byebug
     end
+      total += 1
   end
   -1
-end
-
-def filter_available_moves(moves, deadends_and_visited)
-  moves.delete_if { |move| deadends_and_visited.include?(move) }
 end
 
 def all_next_moves(current_combination)
@@ -42,17 +44,12 @@ def all_next_moves(current_combination)
                     [0,0,0,-1]]
   next_moves = []
   moves_possible.each do |move|
-    next_moves << [move, current_combination].transpose.map!(&:sum)
+    movie = [move, current_combination].transpose.map!(&:sum)
+    movie = movie.filter_map { |m| m = 0 if m == 10 }
+    movie = movie.filter_map { |m| m = 9 if m == -1 }
+    next_moves << movie
   end
   next_moves
 end
 
-def is_target?(last_combo, target)
-  last_combo == target
-end
-
-def nb_of_moves(cur)
-  cur.flatten.drop(4).count / 4
-end
-
-puts open_lock(["0201","0101","0102","1212","2002"], "0202")
+puts open_lock(["8888"], "0009")
