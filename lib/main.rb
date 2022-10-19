@@ -16,22 +16,19 @@ def target_search_algo(deadends, target, match)
   total = 0
 
   until queue.empty?
-    queue.length.times do
+    size = queue.length
+    size.times do
       cur = queue.shift
       return total if cur == match
-      next_moves = all_next_moves(cur)
-      next_moves.each do |move|
-        next if deadends_and_visited.include?(move)
-        deadends_and_visited << move
-        queue << move
-      end
+      all_next_moves(cur, deadends_and_visited, queue)
     end
     total += 1
   end
   -1
 end
 
-def all_next_moves(current_combination)
+
+def all_next_moves(current_combination, visited, queue)
   moves_possible = [[1,0,0,0],
                     [0,1,0,0],
                     [0,0,1,0],
@@ -40,14 +37,14 @@ def all_next_moves(current_combination)
                     [0,-1,0,0],
                     [0,0,-1,0],
                     [0,0,0,-1]]
-  next_moves = []
   moves_possible.each do |move|
     movie = [move, current_combination].transpose.map!(&:sum)
     movie.map! { |m| (m == 10) ? m = 0 : m }  
     movie.map! { |m| (m == -1) ? m = 9 : m }
-    next_moves << movie
+    next if visited.include?(movie)
+    visited << movie
+    queue << movie
   end
-  next_moves
 end
 
 puts open_lock(["2111","2202","2210","0201","2210"],
