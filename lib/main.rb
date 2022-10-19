@@ -3,6 +3,7 @@
 require 'byebug'
 
 def open_lock(deadends, target)
+  return -1 if deadends.include?("0000")
   deadends.map! { |st| st.chars.map!(&:to_i) } 
   target = target.chars.map!(&:to_i)
 
@@ -10,15 +11,15 @@ def open_lock(deadends, target)
 end
 
 def target_search_algo(deadends, target)
-  deadends_and_visited = deadends << [0,0,0,0]
-  queue = [] << [0,0,0,0]
+  deadends_and_visited = deadends << target
+  queue = [] << target
   total = 0
 
   until queue.empty?
     size = queue.length
     size.times do
       cur = queue.shift
-      return total if cur == target
+      return total if cur == [0,0,0,0]
       next_moves = all_next_moves(cur)
       next_moves.each do |move|
         next if deadends_and_visited.include?(move)
@@ -50,5 +51,5 @@ def all_next_moves(current_combination)
   next_moves
 end
 
-puts open_lock(["8887","8889","8878","8898","8788","8988","7888","9888"],
+puts open_lock(["0000"],
 "8888")
