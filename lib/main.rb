@@ -18,7 +18,6 @@ def target_search_algo(deadends, target)
     size = queue.length
     size.times do
       cur = queue.shift
-      byebug
       return total if cur == target
       next_moves = all_next_moves(cur)
       next_moves.each do |move|
@@ -45,8 +44,8 @@ def all_next_moves(current_combination)
   next_moves = []
   moves_possible.each do |move|
     movie = [move, current_combination].transpose.map!(&:sum)
-    movie = movie.filter_map { |m| m = 0 if m == 10 }
-    movie = movie.filter_map { |m| m = 9 if m == -1 }
+    movie.map! { |m| (m == 10) ? m = 0 : m }  
+    movie.map! { |m| (m == -1) ? m = 9 : m }
     next_moves << movie
   end
   next_moves
