@@ -7,10 +7,10 @@ def open_lock(deadends, target)
   deadends.map! { |st| st.chars.map!(&:to_i) } 
   target = target.chars.map!(&:to_i)
 
-  target_search_algo(deadends, target)
+  target.first >= 5 ? target_search_algo(deadends, target, [0,0,0,0]) : target_search_algo(deadends, [0,0,0,0], target)
 end
 
-def target_search_algo(deadends, target)
+def target_search_algo(deadends, target, match)
   deadends_and_visited = deadends << target
   queue = [] << target
   total = 0
@@ -19,7 +19,7 @@ def target_search_algo(deadends, target)
     size = queue.length
     size.times do
       cur = queue.shift
-      return total if cur == [0,0,0,0]
+      return total if cur == match
       next_moves = all_next_moves(cur)
       next_moves.each do |move|
         next if deadends_and_visited.include?(move)
@@ -51,5 +51,5 @@ def all_next_moves(current_combination)
   next_moves
 end
 
-puts open_lock(["0000"],
-"8888")
+puts open_lock(["2111","2202","2210","0201","2210"],
+"2201")
