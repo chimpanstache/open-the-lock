@@ -7,7 +7,7 @@ def open_lock(deadends, target)
   deadends.map! { |st| st.chars.map!(&:to_i) } 
   target = target.chars.map!(&:to_i)
 
-  target.first >= 5 ? target_search_algo(deadends, target, [0,0,0,0]) : target_search_algo(deadends, [0,0,0,0], target)
+  target.first > 5 ? target_search_algo(deadends, target, [0,0,0,0]) : target_search_algo(deadends, [0,0,0,0], target)
 end
 
 def target_search_algo(deadends, target, match)
@@ -39,8 +39,8 @@ def all_next_moves(current_combination, visited, queue)
   [0,0,0,-1]].each do |move|
     movie = [move, current_combination].transpose.map! { |m| m.sum % 10 }
     next if visited.include?(movie)
-    visited << movie
-    queue << movie
+    visited.push(movie)
+    queue.push(movie)
   end
 end
 
