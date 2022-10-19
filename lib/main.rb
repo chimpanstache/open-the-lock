@@ -16,8 +16,7 @@ def target_search_algo(deadends, target, match)
   total = 0
 
   until queue.empty?
-    size = queue.length
-    size.times do
+    queue.length.times do
       cur = queue.shift
       return total if cur == match
       next_moves = all_next_moves(cur)
