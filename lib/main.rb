@@ -29,18 +29,15 @@ end
 
 
 def all_next_moves(current_combination, visited, queue)
-  moves_possible = [[1,0,0,0],
-                    [0,1,0,0],
-                    [0,0,1,0],
-                    [0,0,0,1],
-                    [-1,0,0,0],
-                    [0,-1,0,0],
-                    [0,0,-1,0],
-                    [0,0,0,-1]]
-  moves_possible.each do |move|
-    movie = [move, current_combination].transpose.map!(&:sum)
-    movie.map! { |m| (m == 10) ? m = 0 : m }  
-    movie.map! { |m| (m == -1) ? m = 9 : m }
+  [[1,0,0,0],
+  [0,1,0,0],
+  [0,0,1,0],
+  [0,0,0,1],
+  [-1,0,0,0],
+  [0,-1,0,0],
+  [0,0,-1,0],
+  [0,0,0,-1]].each do |move|
+    movie = [move, current_combination].transpose.map! { |m| m.sum % 10 }
     next if visited.include?(movie)
     visited << movie
     queue << movie
