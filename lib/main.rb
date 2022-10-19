@@ -25,9 +25,8 @@ def target_search_algo(deadends, target)
         deadends_and_visited << move
         queue << move
       end
-      byebug
     end
-      total += 1
+    total += 1
   end
   -1
 end
@@ -51,4 +50,5 @@ def all_next_moves(current_combination)
   next_moves
 end
 
-puts open_lock(["8888"], "0009")
+puts open_lock(["8887","8889","8878","8898","8788","8988","7888","9888"],
+"8888")
