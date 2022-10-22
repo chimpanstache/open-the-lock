@@ -1,5 +1,5 @@
 #frozen_string_literal: true
-
+require 'set'
 require 'byebug'
 
 def open_lock(deadends, target)
@@ -7,42 +7,34 @@ def open_lock(deadends, target)
   deadends.map! { |st| st.chars.map!(&:to_i) } 
   target = target.chars.map!(&:to_i)
 
-  target.first > 5 ? target_search_algo(deadends, target, [0,0,0,0]) : target_search_algo(deadends, [0,0,0,0], target)
-end
-
-def target_search_algo(deadends, target, match)
-  deadends_and_visited = deadends << target
-  queue = [] << target
+  visited = Set.new(deadends)
+  visited.add([0,0,0,0])
+  queue = [[0,0,0,0]]
   total = 0
 
   until queue.empty?
-    size = queue.length
-    size.times do
+    queue.size.times do
       cur = queue.shift
-      return total if cur == match
-      all_next_moves(cur, deadends_and_visited, queue)
+      return total if cur == target
+      [[1,0,0,0],
+      [0,1,0,0],
+      [0,0,1,0],
+      [0,0,0,1],
+      [-1,0,0,0],
+      [0,-1,0,0],
+      [0,0,-1,0],
+      [0,0,0,-1]].each do |move|
+        movie = [move, cur].transpose.map! { |m| m.sum % 10 }
+        next if visited.include?(movie)
+        visited.add(movie)
+        queue.push(movie)
+      end
     end
     total += 1
   end
   -1
 end
 
-
-def all_next_moves(current_combination, visited, queue)
-  [[1,0,0,0],
-  [0,1,0,0],
-  [0,0,1,0],
-  [0,0,0,1],
-  [-1,0,0,0],
-  [0,-1,0,0],
-  [0,0,-1,0],
-  [0,0,0,-1]].each do |move|
-    movie = [move, current_combination].transpose.map! { |m| m.sum % 10 }
-    next if visited.include?(movie)
-    visited.push(movie)
-    queue.push(movie)
-  end
-end
-
-puts open_lock(["2111","2202","2210","0201","2210"],
-"2201")
+puts open_lock(
+["8887","8889","8878","8898","8788","8988","7888","9888"],
+"8888")
